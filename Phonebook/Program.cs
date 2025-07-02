@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 class Program
 {
@@ -27,14 +26,12 @@ class Program
                     Console.WriteLine($"Phonebook exported to {fileName}.json");
                     break;
                 case "2":
-                    Console.WriteLine("Type name of file: ");
-                    fileName = Console.ReadLine();
+                    fileName = GetFileName();
                     ExportPhonebookCSV(phonebook, fileName + ".csv");
                     Console.WriteLine($"Phonebook exported to {fileName}.csv");
                     break;
                 case "3":
-                    Console.Write("Put file into directory of program and type filename here: ");
-                    fileName = Console.ReadLine();
+                    fileName = GetFileName();
                     if (File.Exists(fileName))
                     {
                         phonebook = ImportPhonebook(fileName);
@@ -62,8 +59,8 @@ class Program
                     Console.WriteLine();
                     break;
 
-            case "5":
-                Console.Write("Enter new contact name: ");
+                case "5":
+                    Console.Write("Enter new contact name: ");
                     string name = Console.ReadLine();
                     Console.Write("Enter new contact phone number: ");
                     string phoneNumber = Console.ReadLine();
@@ -80,8 +77,8 @@ class Program
                     }
                     break;
 
-                    case "6":
-                        Console.Write("Enter the name of the contact to remove: ");
+                case "6":
+                    Console.Write("Enter the name of the contact to remove: ");
                     string contactName = Console.ReadLine();
                     Contact contactToRemove = phonebook.FirstOrDefault(c => c.Name.Equals(contactName, StringComparison.OrdinalIgnoreCase));
                     if (contactToRemove != null)
@@ -103,6 +100,14 @@ class Program
                     break;
             }
         }
+    }
+
+    static string GetFileName()
+    {
+        Console.WriteLine("Type name of file: ");
+        string fileName = Console.ReadLine();
+
+        return fileName;
     }
 
     static List<Contact> ImportPhonebookJSON(string fileName)
@@ -162,13 +167,13 @@ class Program
     static List<Contact> ImportPhonebook(string fileName)
     {
         List<Contact> defaultPhonebook = new List<Contact>() { new Contact("Alice", "123-456-7890", "alice@gmail.com"), new Contact("Bob", "543-543-5432", "bob@gmail.com") };
-        if (fileName.Substring(fileName.Length - 4) == ".csv")
+        if (Path.GetExtension(fileName).Equals(".csv", StringComparison.OrdinalIgnoreCase))
         {
             return ImportPhonebookCSV(fileName);
         }
         else
         {
-            if (fileName.Substring(fileName.Length - 4) == "json")
+            if (Path.GetExtension(fileName).Equals(".json", StringComparison.OrdinalIgnoreCase))
             {
                 return ImportPhonebookJSON(fileName);
             }
